@@ -2,10 +2,12 @@ from typing import Optional
 from uuid import uuid4
 
 from .api_types import Dimension
+from .base import Operation
 
 
-class Object:
+class Object(Operation):
     object_id: str
+    children: list[Operation]
     width: Dimension
     height: Dimension
 
@@ -25,6 +27,8 @@ class Object:
 
         self.width = width
         self.height = height
+        self.children = []
 
-    def compile(self) -> list[dict]:
-        raise NotImplementedError("Please implement compile()")
+    def __call__(self, *children: list[Operation]):
+        self.children = children
+        return self

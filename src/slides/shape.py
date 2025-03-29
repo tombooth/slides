@@ -1,17 +1,16 @@
 from typing import Optional
 
+from .api_types import Type
 from .base import Context
 from .object import Object
 
 
-class Page(Object):
-    def __init__(self, **kwargs):
-        super().__init__(**kwargs)
+class Shape(Object):
+    type: Type
 
-
-class Slide(Page):
-    def __init__(self, **kwargs):
+    def __init__(self, type: Type, **kwargs):
         super().__init__(**kwargs)
+        self.type = type
 
     def compile(self, context: Optional[Context] = None) -> list[dict]:
         if context is None:
@@ -20,16 +19,11 @@ class Slide(Page):
         context.push(self)
 
         if self._new:
-            requests = [{"createSlide": {"objectId": self.object_id}}]
-        else:
             requests = [
-                {
-                    "deleteObject": {
-                        "objectId": self.object_id,
-                    }
-                },
-                {"createSlide": {"objectId": self.object_id}},
+                {"createShape": {"objectId": self.object_id, "shapeType": self.type}}
             ]
+        else:
+            requests = []
 
         return requests + [
             request
@@ -38,5 +32,11 @@ class Slide(Page):
         ]
 
 
-def slide(**kwargs) -> Slide:
-    return Slide(**kwargs)
+class TextBox(Shape):
+    def __init__(self, **kwargs):
+        kwargs["type"] = Type.TEXT_BOX
+        super().__init__(**kwargs)
+
+
+def text_box(**kwargs) -> TextBox:
+    return TextBox(**kwargs)

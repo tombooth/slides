@@ -12,3 +12,7 @@ class Unit(Enum):
 class Dimension:
     magnitude: float
     unit: Unit
+
+
+class Type(Enum):
+    TEXT_BOX = "TEXT_BOX"
