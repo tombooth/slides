@@ -59,7 +59,7 @@ def main():
         ),
     )
 
-    tx.commit(credentials=credentials)
+    tx.commit()
 
 
 if __name__ == "__main__":

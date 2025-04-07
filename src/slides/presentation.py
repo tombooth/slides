@@ -12,10 +12,17 @@ from .page import Slide
 
 class Presentation:
 
-    def __init__(self, id: str, width: Dimension, height: Dimension):
+    def __init__(
+        self,
+        id: str,
+        width: Dimension,
+        height: Dimension,
+        credentials: Optional[Credentials] = None,
+    ):
         self.id = id
         self.width = width
         self.height = height
+        self._credentials = credentials
 
     def begin(self) -> "Transaction":
         return Transaction(self)
@@ -66,9 +73,12 @@ class Transaction:
         print(json.dumps(updates))
 
         if credentials is None:
-            credentials, _ = default(
-                scopes=["https://www.googleapis.com/auth/presentations"]
-            )
+            if self.presentation._credentials is not None:
+                credentials = self.presentation._credentials
+            else:
+                credentials, _ = default(
+                    scopes=["https://www.googleapis.com/auth/presentations"]
+                )
 
         # Build the Google Slides API service
         service = build("slides", "v1", credentials=credentials)

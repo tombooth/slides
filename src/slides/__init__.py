@@ -40,4 +40,6 @@ def open(url: str, credentials: Optional[Credentials] = None) -> Presentation:
     height = Dimension(page_size["height"]["magnitude"], page_size["height"]["unit"])
 
     # Initialize and return the Presentation object
-    return Presentation(id=presentation_id, width=width, height=height)
+    return Presentation(
+        id=presentation_id, width=width, height=height, credentials=credentials
+    )
