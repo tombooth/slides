@@ -1,2 +1,7 @@
 
-cmake "-Dpybind11_DIR=$(uv run python3 -m pybind11 --cmakedir)" ..
+# slides
+
+A python library that uses [Yoga](https://github.com/facebook/yoga) to make
+laying out Google Slides easy.
+
+You can find an example in `./example.py`

@@ -8,6 +8,7 @@ from .presentation import Presentation
 from .api_types import Dimension
 
 # include DSL functions
+from .page import box
 from .shape import text_box
 from .operation import insert_text
 

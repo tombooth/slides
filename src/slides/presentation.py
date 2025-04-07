@@ -1,3 +1,5 @@
+import json
+
 from googleapiclient.discovery import build
 from google.auth import default
 from google.oauth2.credentials import Credentials
@@ -60,6 +62,8 @@ class Transaction:
         """
 
         updates = self.compile()
+
+        print(json.dumps(updates))
 
         if credentials is None:
             credentials, _ = default(

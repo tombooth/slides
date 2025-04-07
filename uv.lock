@@ -341,14 +341,7 @@ wheels = [
 [[package]]
 name = "pyyoga"
 version = "0.1.0"
-source = { editable = "../pyyoga" }
-
-[package.metadata]
-requires-dist = [{ name = "pytest", marker = "extra == 'test'" }]
-provides-extras = ["test"]
-
-[package.metadata.requires-dev]
-dev = [{ name = "pytest", specifier = ">=8.3.5" }]
+source = { git = "https://github.com/tombooth/pyyoga#f68a1739b0cd68bb53c2c4b3da3e24b70088ed66" }
 
 [[package]]
 name = "requests"
@@ -415,7 +408,7 @@ requires-dist = [
     { name = "google-auth-httplib2", specifier = ">=0.2.0" },
     { name = "google-auth-oauthlib", specifier = ">=1.2.1" },
     { name = "pybind11", specifier = ">=2.13.6" },
-    { name = "pyyoga", editable = "../pyyoga" },
+    { name = "pyyoga", git = "https://github.com/tombooth/pyyoga" },
 ]
 
 [package.metadata.requires-dev]

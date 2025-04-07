@@ -17,9 +17,6 @@ dependencies = [
 requires = ["hatchling"]
 build-backend = "hatchling.build"
 
-[tool.uv.sources]
-pyyoga = { path = "../pyyoga", editable = true }
-
 
 [dependency-groups]
 dev = [
@@ -43,3 +40,6 @@ testpaths = ["tests"]
 build-frontend = "build[uv]"
 test-command = "pytest {project}/tests"
 test-extras = ["test"]
+
+[tool.uv.sources]
+pyyoga = { git = "https://github.com/tombooth/pyyoga" }

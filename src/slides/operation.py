@@ -1,6 +1,6 @@
 from typing import Optional
 
-from .base import Operation
+from .base import Operation, Layout
 from .shape import Shape
 
 
@@ -9,11 +9,11 @@ class InsertText(Operation):
         super().__init__(**kwargs)
         self.text = text
 
-    def compile(self, context: Optional[list[Operation]] = None) -> list[dict]:
-        if not context:
-            raise ValueError("Context is required for InsertText operation")
+    def compile(self, layout: Optional[Layout] = None) -> list[dict]:
+        if not layout:
+            raise ValueError("layout is required for InsertText operation")
 
-        shape = context.find_first(Shape)
+        shape = layout.first_parent(Shape)
 
         return [
             {
