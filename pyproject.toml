@@ -9,6 +9,7 @@ dependencies = [
     "google-api-python-client>=2.166.0",
     "google-auth-httplib2>=0.2.0",
     "google-auth-oauthlib>=1.2.1",
+    "google-cloud-secret-manager>=2.23.2",
     "pybind11>=2.13.6",
     "pyyoga",
 ]
