@@ -15,7 +15,8 @@ class Layout:
     def push(self, operation: "Operation"):
         return Layout(operation, *self.parents)
 
-    def first_parent[T](self, operation_class: type[T]) -> T:
+    # def first_parent[T](self, operation_class: type[T]) -> T:
+    def first_parent(self, operation_class: type) -> any:
         for operation in self.parents:
             if isinstance(operation, operation_class):
                 return operation
