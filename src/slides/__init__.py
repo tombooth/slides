@@ -2,10 +2,11 @@ import re
 from googleapiclient.discovery import build
 from google.auth import default
 from google.oauth2.credentials import Credentials
-from typing import Optional
+from typing import Optional, Union
 
-from .presentation import Presentation
+from .auth.secret import from_secret
 from .api_types import Dimension
+from .presentation import Presentation
 
 # include DSL functions
 from .page import box
@@ -13,7 +14,9 @@ from .shape import text_box
 from .operation import insert_text
 
 
-def open(url: str, credentials: Optional[Credentials] = None) -> Presentation:
+def open(
+    url: str, credentials: Optional[Union[Credentials | str]] = None
+) -> Presentation:
     """
     Fetches a Google Slides presentation using the API and initializes a Presentation object.
     """
@@ -27,6 +30,8 @@ def open(url: str, credentials: Optional[Credentials] = None) -> Presentation:
         credentials, _ = default(
             scopes=["https://www.googleapis.com/auth/presentations"]
         )
+    elif isinstance(credentials, str):
+        credentials = from_secret(credentials)
 
     # Build the Google Slides API service
     service = build("slides", "v1", credentials=credentials)

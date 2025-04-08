@@ -1,7 +1,6 @@
 import slides
 
 from slides import box, text_box, insert_text
-from slides.auth import local_oauth, from_secret
 
 
 def main():
@@ -9,12 +8,10 @@ def main():
     #     credentials_path="credentials.json",
     #     encryption_key=b"12345678901234567890123456789012",  # Must be 32 bytes long
     # )
-    credentials = slides.auth.from_secret(
-        "resource name of the secret in Google Secret Manager"
-    )
+
     presentation = slides.open(
         "url of a presentation to add slide to",
-        credentials=credentials,
+        credentials="resource name of the secret in Google Secret Manager",
     )
 
     tx = presentation.begin()
