@@ -26,7 +26,11 @@ def from_secret(resource_name: str) -> Credentials:
     # Parse the JSON and create the Credentials object
     service_account_info = json.loads(secret_payload)
     credentials = Credentials.from_service_account_info(
-        service_account_info, scopes=["https://www.googleapis.com/auth/presentations"]
+        service_account_info,
+        scopes=[
+            "https://www.googleapis.com/auth/presentations",
+            "https://www.googleapis.com/auth/devstorage.read_write",
+        ],
     )
 
     return credentials

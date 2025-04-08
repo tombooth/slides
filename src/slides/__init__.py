@@ -9,9 +9,10 @@ from .api_types import Dimension
 from .presentation import Presentation
 
 # include DSL functions
+from .image import image
+from .operation import insert_text
 from .page import box
 from .shape import text_box
-from .operation import insert_text
 
 
 def open(
