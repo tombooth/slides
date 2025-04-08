@@ -6,7 +6,6 @@ from google.oauth2.credentials import Credentials
 from typing import Optional
 
 from .api_types import Dimension
-from .object import Object
 from .page import Slide
 
 
@@ -24,15 +23,6 @@ class Presentation:
         self.height = height
         self._credentials = credentials
 
-    def begin(self) -> "Transaction":
-        return Transaction(self)
-
-
-class Transaction:
-    def __init__(self, presentation: Presentation):
-        self.presentation = presentation
-        self._to_compile = []
-
     def slide(self, **kwargs) -> Slide:
         """
         Creates or updates a slide.
@@ -41,40 +31,26 @@ class Transaction:
         """
 
         default_kwargs = {
-            "width": self.presentation.width,
-            "height": self.presentation.height,
+            "width": self.width,
+            "height": self.height,
         }
         merged_kwargs = {**default_kwargs, **kwargs}
         slide = Slide(**merged_kwargs)
 
-        self._to_compile.append(slide)
-
         return slide
 
-    def compile(self) -> list[dict]:
+    def batch(self, *slides: list[Slide], credentials: Optional[Credentials] = None):
         """
-        Compiles changes into a batch update set of operations
-        """
-
-        updates = []
-
-        for object in self._to_compile:
-            updates += object.compile()
-
-        return updates
-
-    def commit(self, credentials: Optional[Credentials] = None):
-        """
-        Commits the changes to the presentation
+        Batches the changes to the presentation
         """
 
-        updates = self.compile()
+        requests = [request for slide in slides for request in slide.compile()]
 
-        print(json.dumps(updates))
+        print(json.dumps(requests))
 
         if credentials is None:
-            if self.presentation._credentials is not None:
-                credentials = self.presentation._credentials
+            if self._credentials is not None:
+                credentials = self._credentials
             else:
                 credentials, _ = default(
                     scopes=["https://www.googleapis.com/auth/presentations"]
@@ -85,8 +61,8 @@ class Transaction:
         print(
             service.presentations()
             .batchUpdate(
-                presentationId=self.presentation.id,
-                body={"requests": updates},
+                presentationId=self.id,
+                body={"requests": requests},
             )
             .execute()
         )

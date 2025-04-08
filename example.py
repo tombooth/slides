@@ -14,52 +14,50 @@ def main():
         credentials="resource name of the secret in Google Secret Manager",
     )
 
-    tx = presentation.begin()
-
-    tx.slide(
-        flex_direction="column",
-        justify_content="space-around",
-        align_content="center",
-    )(
-        text_box(
-            height="50pt",
-            margin="5pt 5pt 5pt 0pt",
-            border="1pt",
-            border_color="#999",
-            content_alignment="middle",
-            background_color="#ccc",
-            color="#ffffff",
-        )(
-            insert_text("Big title highlihgiting important thing"),
-        ),
-        box(
-            flex_grow=1,
-            flex_direction="row",
-            gap="5pt",
-            padding="5pt",
+    presentation.batch(
+        presentation.slide(
+            flex_direction="column",
+            justify_content="space-around",
+            align_content="center",
         )(
             text_box(
-                flex_grow=1,
-                alignment="center",
+                height="50pt",
+                margin="5pt 5pt 5pt 0pt",
+                border="1pt",
+                border_color="#999",
                 content_alignment="middle",
-                background_color="#0000ff",
+                background_color="#ccc",
                 color="#ffffff",
             )(
-                insert_text("I'm on the left"),
+                insert_text("Big title highlihgiting important thing"),
             ),
-            text_box(
+            box(
                 flex_grow=1,
-                alignment="center",
-                content_alignment="middle",
-                background_color="#ff0000",
-                color="#ffffff",
+                flex_direction="row",
+                gap="5pt",
+                padding="5pt",
             )(
-                insert_text("I'm on the right"),
+                text_box(
+                    flex_grow=1,
+                    alignment="center",
+                    content_alignment="middle",
+                    background_color="#0000ff",
+                    color="#ffffff",
+                )(
+                    insert_text("I'm on the left"),
+                ),
+                text_box(
+                    flex_grow=1,
+                    alignment="center",
+                    content_alignment="middle",
+                    background_color="#ff0000",
+                    color="#ffffff",
+                )(
+                    insert_text("I'm on the right"),
+                ),
             ),
-        ),
+        )
     )
-
-    tx.commit()
 
 
 if __name__ == "__main__":
