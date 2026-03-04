@@ -104,3 +104,17 @@ class TestSlideDefinition:
         sd = SlideDefinition.model_validate(data)
         assert sd.object_id == "slide-1"
         assert sd.children[0].children[0].text == "Hello"
+
+
+class TestSchemaExamples:
+    def test_element_schema_has_examples(self):
+        schema = Element.model_json_schema()
+        # Element is self-referential, so schema uses $defs/Element with a $ref
+        element_schema = schema.get("$defs", {}).get("Element", schema)
+        assert "examples" in element_schema
+        assert len(element_schema["examples"]) >= 1
+
+    def test_slide_definition_schema_has_examples(self):
+        schema = SlideDefinition.model_json_schema()
+        assert "examples" in schema
+        assert len(schema["examples"]) >= 1
