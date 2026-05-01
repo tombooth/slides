@@ -2,7 +2,7 @@ from dataclasses import dataclass
 from typing import Optional, Union
 from pyyoga import YogaNode, FlexDirection, JustifyContent, Align
 
-from .api_types import Dimension, Unit
+from .api_types import Dimension, OpaqueColor, Unit
 from .base import Layout
 from .object import Object
 
@@ -93,6 +93,10 @@ class Box(Object):
     justify_content: Optional[JustifyContent]
     align_content: Optional[Align]
     flex_grow: Optional[float]
+    font_family: Optional[str]
+    font_size: Optional[Dimension]
+    font_weight: Optional[int]
+    color: Optional[OpaqueColor]
 
     def __init__(
         self,
@@ -106,6 +110,10 @@ class Box(Object):
         justify_content: Optional[str | JustifyContent] = None,
         align_content: Optional[str | Align] = None,
         flex_grow: Optional[float] = None,
+        font_family: Optional[str] = None,
+        font_size: Optional[str | Dimension] = None,
+        font_weight: Optional[int] = None,
+        color: Optional[str | OpaqueColor] = None,
         **kwargs,
     ):
         super().__init__(**kwargs)
@@ -120,6 +128,10 @@ class Box(Object):
         self.justify_content = JustifyContent.parse(justify_content)
         self.align_content = Align.parse(align_content)
         self.flex_grow = flex_grow
+        self.font_family = font_family
+        self.font_size = Dimension.parse(font_size)
+        self.font_weight = font_weight
+        self.color = OpaqueColor.parse(color)
 
         self._node = None
 
