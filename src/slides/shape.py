@@ -90,13 +90,11 @@ class TextBox(Shape):
     def __init__(
         self,
         alignment: Optional[str | Alignment] = None,
-        color: Optional[str | OpaqueColor] = None,
         **kwargs,
     ):
         kwargs["type"] = Type.TEXT_BOX
         super().__init__(**kwargs)
         self.alignment = Alignment.parse(alignment)
-        self.color = OpaqueColor.parse(color)
 
     def _resolve_inherited(self, layout: Optional[Layout], attr: str):
         if layout is not None:
@@ -132,14 +130,15 @@ class TextBox(Shape):
 
         text_style = {}
 
-        if self.color:
-            text_style["foregroundColor"] = {
-                "opaqueColor": self.color.to_dict(),
-            }
-
+        color = self._resolve_inherited(layout, "color")
         font_family = self._resolve_inherited(layout, "font_family")
         font_size = self._resolve_inherited(layout, "font_size")
         font_weight = self._resolve_inherited(layout, "font_weight")
+
+        if color is not None:
+            text_style["foregroundColor"] = {
+                "opaqueColor": color.to_dict(),
+            }
 
         if font_family is not None:
             text_style["fontFamily"] = font_family

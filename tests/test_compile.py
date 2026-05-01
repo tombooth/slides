@@ -99,3 +99,17 @@ def test_font_properties_child_overrides_parent():
 
     assert update["style"]["fontFamily"] == "Inter"
     assert update["style"]["fontSize"]["magnitude"] == 24
+
+
+def test_color_cascades_from_parent_box():
+    tb = text_box()(insert_text("hi"))
+    slide_1 = slide(color="#ff0000")(box()(tb))
+
+    requests = slide_1.compile()
+    update = _find_update_text_style(requests, tb.object_id)
+
+    assert update is not None
+    fg = update["style"]["foregroundColor"]["opaqueColor"]["rgbColor"]
+    assert fg["red"] == 1.0
+    assert fg["green"] == 0.0
+    assert fg["blue"] == 0.0
