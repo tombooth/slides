@@ -3,7 +3,7 @@ from typing import Optional
 
 from .api_types import Type, ContentAlignment, Alignment, OpaqueColor
 from .base import Layout
-from .page import PageElement
+from .page import Box, PageElement
 
 
 class Shape(PageElement):
@@ -98,6 +98,15 @@ class TextBox(Shape):
         self.alignment = Alignment.parse(alignment)
         self.color = OpaqueColor.parse(color)
 
+    def _resolve_inherited(self, layout: Optional[Layout], attr: str):
+        if layout is not None:
+            for parent in layout.parents:
+                if isinstance(parent, Box):
+                    value = getattr(parent, attr, None)
+                    if value is not None:
+                        return value
+        return getattr(self, attr, None)
+
     def _style_shape(self, layout: Optional[Layout] = None) -> list[dict]:
         requests = super()._style_shape(layout)
 
@@ -126,6 +135,22 @@ class TextBox(Shape):
         if self.color:
             text_style["foregroundColor"] = {
                 "opaqueColor": self.color.to_dict(),
+            }
+
+        font_family = self._resolve_inherited(layout, "font_family")
+        font_size = self._resolve_inherited(layout, "font_size")
+        font_weight = self._resolve_inherited(layout, "font_weight")
+
+        if font_family is not None:
+            text_style["fontFamily"] = font_family
+
+        if font_size is not None:
+            text_style["fontSize"] = font_size.to_dict()
+
+        if font_weight is not None:
+            text_style["weightedFontFamily"] = {
+                "fontFamily": font_family if font_family is not None else "Arial",
+                "weight": int(font_weight),
             }
 
         text_fields = ",".join(text_style.keys())

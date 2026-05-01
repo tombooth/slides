@@ -1,6 +1,6 @@
 import json
 
-from slides.page import slide
+from slides.page import slide, box
 from slides.shape import text_box
 from slides.operation import insert_text
 
@@ -51,3 +51,51 @@ def test_layout():
         and request["createShape"]["elementProperties"]["transform"]["translateY"] == 0
         for request in requests
     )
+
+
+def _find_update_text_style(requests, object_id):
+    for r in requests:
+        if "updateTextStyle" in r and r["updateTextStyle"]["objectId"] == object_id:
+            return r["updateTextStyle"]
+    return None
+
+
+def test_font_properties_on_text_box():
+    tb = text_box(font_family="Roboto", font_size="18pt", font_weight=700)(
+        insert_text("hi")
+    )
+    slide_1 = slide()(tb)
+
+    requests = slide_1.compile()
+    update = _find_update_text_style(requests, tb.object_id)
+
+    assert update is not None
+    assert update["style"]["fontFamily"] == "Roboto"
+    assert update["style"]["fontSize"]["magnitude"] == 18
+    assert update["style"]["weightedFontFamily"]["fontFamily"] == "Roboto"
+    assert update["style"]["weightedFontFamily"]["weight"] == 700
+    fields = set(update["fields"].split(","))
+    assert {"fontFamily", "fontSize", "weightedFontFamily"} <= fields
+
+
+def test_font_properties_cascade_from_parent_box():
+    tb = text_box()(insert_text("hi"))
+    slide_1 = slide(font_family="Inter", font_size="12pt")(box()(tb))
+
+    requests = slide_1.compile()
+    update = _find_update_text_style(requests, tb.object_id)
+
+    assert update is not None
+    assert update["style"]["fontFamily"] == "Inter"
+    assert update["style"]["fontSize"]["magnitude"] == 12
+
+
+def test_font_properties_child_overrides_parent():
+    tb = text_box(font_size="24pt")(insert_text("hi"))
+    slide_1 = slide(font_family="Inter", font_size="12pt")(tb)
+
+    requests = slide_1.compile()
+    update = _find_update_text_style(requests, tb.object_id)
+
+    assert update["style"]["fontFamily"] == "Inter"
+    assert update["style"]["fontSize"]["magnitude"] == 24
