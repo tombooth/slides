@@ -1,6 +1,6 @@
 from dataclasses import dataclass
 from typing import Optional, Union
-from pyyoga import YogaNode, FlexDirection, JustifyContent, Align
+from pyyoga import YogaNode, FlexDirection, JustifyContent, Align, FlexWrap
 
 from .api_types import Dimension, OpaqueColor, Unit
 from .base import Layout
@@ -90,6 +90,7 @@ class Box(Object):
     margin: Optional[BoxDimension]
     border: Optional[Dimension]  # slides can't set borders separately
     flex_direction: Optional[FlexDirection]
+    flex_wrap: Optional[FlexWrap]
     justify_content: Optional[JustifyContent]
     align_content: Optional[Align]
     flex_grow: Optional[float]
@@ -107,6 +108,7 @@ class Box(Object):
         margin: Optional[str | BoxDimension] = None,
         border: Optional[str | Dimension] = None,
         flex_direction: Optional[str | FlexDirection] = None,
+        flex_wrap: Optional[str | FlexWrap] = None,
         justify_content: Optional[str | JustifyContent] = None,
         align_content: Optional[str | Align] = None,
         flex_grow: Optional[float] = None,
@@ -125,6 +127,7 @@ class Box(Object):
         self.margin = BoxDimension.parse(margin)
         self.border = Dimension.parse(border)
         self.flex_direction = FlexDirection.parse(flex_direction)
+        self.flex_wrap = FlexWrap.parse(flex_wrap)
         self.justify_content = JustifyContent.parse(justify_content)
         self.align_content = Align.parse(align_content)
         self.flex_grow = flex_grow
@@ -180,6 +183,8 @@ class Box(Object):
 
         if self.flex_direction is not None:
             node.set_flex_direction(self.flex_direction)
+        if self.flex_wrap is not None:
+            node.set_flex_wrap(self.flex_wrap)
         if self.justify_content is not None:
             node.set_justify_content(self.justify_content)
         if self.align_content is not None:
