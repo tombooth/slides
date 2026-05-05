@@ -4,13 +4,14 @@ from google.cloud.storage import Client
 from google.auth.credentials import Credentials
 from matplotlib.figure import Figure
 from matplotlib.axes import Axes
+from plotly.graph_objects import Figure as PlotlyFigure
 
 import io
 import datetime
 
 
 def signed_url_for(
-    image: Union[Axes, Figure, str],
+    image: Union[Axes, Figure, PlotlyFigure, str],
     bucket: str,
     credentials: Credentials,
     prefix: Optional[str] = None,
@@ -20,7 +21,7 @@ def signed_url_for(
     Uploads an image to a GCS bucket and returns a signed URL.
 
     Args:
-        image (Union[Axes, Figure, str]): The image to upload. Can be a matplotlib Axes, Figure, or file path.
+        image (Union[Axes, Figure, PlotlyFigure, str]): The image to upload. Can be a matplotlib Axes, Figure, plotly Figure, or file path.
         bucket (str): The name of the GCS bucket.
         credentials (Credentials): GCP credentials
         prefix (Optional[str]): Optional prefix for the blob name.
@@ -43,9 +44,12 @@ def signed_url_for(
         image.savefig(buf, format="png")
         buf.seek(0)
         blob.upload_from_file(buf, content_type="image/png")
+    elif isinstance(image, PlotlyFigure):
+        buf = io.BytesIO(image.to_image(format="png"))
+        blob.upload_from_file(buf, content_type="image/png")
     elif isinstance(image, str):
         blob.upload_from_filename(image)
     else:
-        raise ValueError("Unsupported image type. Must be Axes, Figure, or file path.")
+        raise ValueError("Unsupported image type. Must be Axes, Figure, plotly Figure, or file path.")
 
     return blob.generate_signed_url(expiration=expiration, version="v4")
