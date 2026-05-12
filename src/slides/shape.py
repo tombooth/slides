@@ -1,7 +1,7 @@
 from collections import defaultdict
 from typing import Optional
 
-from .api_types import Type, ContentAlignment, Alignment, OpaqueColor
+from .api_types import Type, ContentAlignment, Alignment
 from .base import Layout
 from .page import Box, PageElement
 
@@ -13,15 +13,11 @@ class Shape(PageElement):
         self,
         type: Type,
         content_alignment: Optional[str | ContentAlignment] = None,
-        background_color: Optional[str | OpaqueColor] = None,
-        border_color: Optional[str | OpaqueColor] = None,
         **kwargs,
     ):
         super().__init__(**kwargs)
         self.type = type
         self.content_alignment = ContentAlignment.parse(content_alignment)
-        self.background_color = OpaqueColor.parse(background_color)
-        self.border_color = OpaqueColor.parse(border_color)
 
     def _style_shape(self, _: Optional[Layout] = None) -> list[dict]:
         shapeProperties = defaultdict(dict)

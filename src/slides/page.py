@@ -89,6 +89,8 @@ class Box(Object):
     padding: Optional[BoxDimension]  # slides can't set padding on shapes
     margin: Optional[BoxDimension]
     border: Optional[Dimension]  # slides can't set borders separately
+    border_color: Optional[OpaqueColor]
+    background_color: Optional[OpaqueColor]
     flex_direction: Optional[FlexDirection]
     flex_wrap: Optional[FlexWrap]
     justify_content: Optional[JustifyContent]
@@ -107,6 +109,8 @@ class Box(Object):
         padding: Optional[str | BoxDimension] = None,
         margin: Optional[str | BoxDimension] = None,
         border: Optional[str | Dimension] = None,
+        border_color: Optional[str | OpaqueColor] = None,
+        background_color: Optional[str | OpaqueColor] = None,
         flex_direction: Optional[str | FlexDirection] = None,
         flex_wrap: Optional[str | FlexWrap] = None,
         justify_content: Optional[str | JustifyContent] = None,
@@ -126,6 +130,8 @@ class Box(Object):
         self.padding = BoxDimension.parse(padding)
         self.margin = BoxDimension.parse(margin)
         self.border = Dimension.parse(border)
+        self.border_color = OpaqueColor.parse(border_color)
+        self.background_color = OpaqueColor.parse(background_color)
         self.flex_direction = FlexDirection.parse(flex_direction)
         self.flex_wrap = FlexWrap.parse(flex_wrap)
         self.justify_content = JustifyContent.parse(justify_content)
